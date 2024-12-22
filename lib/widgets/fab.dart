@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:to_do/pages/academictaskpage.dart';
+import 'package:to_do/pages/personaltaskpage.dart';
 
 class FAB extends StatelessWidget {
   const FAB({super.key});
@@ -25,7 +27,13 @@ class FAB extends StatelessWidget {
           shape: ContinuousRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
-
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => const AcademicTask(),
+              ),
+            );
+          },
         ),
         SpeedDialChild(
           child: const Icon(Icons.person_outline_rounded),
@@ -33,7 +41,12 @@ class FAB extends StatelessWidget {
           shape: ContinuousRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
-        )
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const PersonalTask(),
+            ),
+          ),
+        ),
       ],
       child: const Icon(
         Icons.add,

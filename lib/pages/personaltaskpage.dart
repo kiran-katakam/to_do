@@ -1,7 +1,7 @@
-import 'dart:math';
-
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:to_do/utils.dart';
 
 class PersonalTask extends StatefulWidget {
   const PersonalTask({super.key});
@@ -19,15 +19,68 @@ class _PersonalTaskState extends State<PersonalTask> {
   late SharedPreferences sharedPreferences;
   late int personalTaskCount;
   late bool isDateModified;
+  bool hasError = false;
+  final String personalTaskCountKey = "personalTaskCount";
+  final String personalTaskKeyPrefix = "personalTask";
 
   Future<void> instantiateSharedPreferencesInstance() async {
     sharedPreferences = await SharedPreferences.getInstance();
-    if (sharedPreferences.getInt("personalTaskCount") == null) {
-      sharedPreferences.setInt("personalTaskCount", 0);
+    if (sharedPreferences.getInt(personalTaskCountKey) == null) {
+      await sharedPreferences.setInt(personalTaskCountKey, 0);
       personalTaskCount = 0;
     } else {
-      personalTaskCount = sharedPreferences.getInt("personalTaskCount")!;
+      personalTaskCount = sharedPreferences.getInt(personalTaskCountKey)!;
     }
+  }
+
+  void _saveTask() async {
+    final task = {
+      'title': titleController.text.trim(),
+      'description': descriptionController.text.trim(),
+      'isRelatedToMoney': isRelatedToMoney,
+      'money': isRelatedToMoney ? moneyController.text.trim() : null,
+      'date': toDDMMYYYY(selectedDate),
+    };
+    await sharedPreferences.setInt(personalTaskCountKey, personalTaskCount + 1);
+    await sharedPreferences.setString(
+        "$personalTaskKeyPrefix${personalTaskCount + 1}", jsonEncode(task));
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Task Added Successfully"),
+        behavior: SnackBarBehavior.floating,
+        showCloseIcon: true,
+      ),
+    );
+  }
+
+  bool _validateInputs() {
+    if (titleController.text.trim().isEmpty) {
+      _showSnackBar("Title Required");
+      return false;
+    }
+    if (descriptionController.text.trim().isEmpty) {
+      _showSnackBar("Description Required");
+      return false;
+    }
+    if (isRelatedToMoney && moneyController.text.trim().isEmpty) {
+      _showSnackBar("Amount Required");
+      return false;
+    }
+    if (!isDateModified) {
+      _showSnackBar("Please Select a Date");
+      return false;
+    }
+    return true;
+  }
+
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        behavior: SnackBarBehavior.floating,
+        showCloseIcon: true,
+      ),
+    );
   }
 
   @override
@@ -137,7 +190,7 @@ class _PersonalTaskState extends State<PersonalTask> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  "Date",
+                  "Selected Date",
                   style: TextStyle(fontSize: 16),
                 ),
                 GestureDetector(
@@ -168,35 +221,8 @@ class _PersonalTaskState extends State<PersonalTask> {
             ),
             ElevatedButton(
               onPressed: () {
-                if (titleController.text.trim().isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Title Required"),
-                      showCloseIcon: true,
-                    ),
-                  );
-                } else if (descriptionController.text.trim().isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Description Required"),
-                      showCloseIcon: true,
-                    ),
-                  );
-                } else if (isRelatedToMoney &&
-                    moneyController.text.trim().isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Amount Required"),
-                      showCloseIcon: true,
-                    ),
-                  );
-                } else if (!isDateModified) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Please Select a Date"),
-                      showCloseIcon: true,
-                    ),
-                  );
+                if (_validateInputs()) {
+                  _saveTask();
                 }
               },
               style: ElevatedButton.styleFrom(

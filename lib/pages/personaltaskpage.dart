@@ -1,6 +1,6 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:to_do/providers/taskprovider.dart';
 import 'package:to_do/utils.dart';
 
 class PersonalTask extends StatefulWidget {
@@ -16,24 +16,9 @@ class _PersonalTaskState extends State<PersonalTask> {
   late TextEditingController titleController;
   late TextEditingController descriptionController;
   late DateTime selectedDate;
-  late SharedPreferences sharedPreferences;
-  late int personalTaskCount;
   late bool isDateModified;
-  bool hasError = false;
-  final String personalTaskCountKey = "personalTaskCount";
-  final String personalTaskKeyPrefix = "personalTask";
 
-  Future<void> instantiateSharedPreferencesInstance() async {
-    sharedPreferences = await SharedPreferences.getInstance();
-    if (sharedPreferences.getInt(personalTaskCountKey) == null) {
-      await sharedPreferences.setInt(personalTaskCountKey, 0);
-      personalTaskCount = 0;
-    } else {
-      personalTaskCount = sharedPreferences.getInt(personalTaskCountKey)!;
-    }
-  }
-
-  void _saveTask() async {
+  void _addTask(WidgetRef ref) async {
     final task = {
       'title': titleController.text.trim(),
       'description': descriptionController.text.trim(),
@@ -41,16 +26,8 @@ class _PersonalTaskState extends State<PersonalTask> {
       'money': isRelatedToMoney ? moneyController.text.trim() : null,
       'date': toDDMMYYYY(selectedDate),
     };
-    await sharedPreferences.setInt(personalTaskCountKey, personalTaskCount + 1);
-    await sharedPreferences.setString(
-        "$personalTaskKeyPrefix${personalTaskCount + 1}", jsonEncode(task));
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text("Task Added Successfully"),
-        behavior: SnackBarBehavior.floating,
-        showCloseIcon: true,
-      ),
-    );
+    await ref.read(personalTaskProvider.notifier).addTask(task.toString());
+    _showSnackBar("Task Added Successfully");
   }
 
   bool _validateInputs() {
@@ -91,7 +68,6 @@ class _PersonalTaskState extends State<PersonalTask> {
     descriptionController = TextEditingController();
     selectedDate = DateTime.now();
     isDateModified = false;
-    instantiateSharedPreferencesInstance();
   }
 
   @override
@@ -219,23 +195,25 @@ class _PersonalTaskState extends State<PersonalTask> {
             const Spacer(
               flex: 1,
             ),
-            ElevatedButton(
-              onPressed: () {
-                if (_validateInputs()) {
-                  _saveTask();
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                  shape: ContinuousRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  minimumSize: const Size(150, 50),
-                  backgroundColor: const Color.fromRGBO(205, 185, 252, 1),
-                  foregroundColor: Colors.black,
-                  splashFactory: InkRipple.splashFactory),
-              child: const Text(
-                "Add Task",
-                style: TextStyle(fontSize: 20),
+            Consumer(
+              builder: (context, ref, child) => ElevatedButton(
+                onPressed: () async {
+                  if (_validateInputs()) {
+                    _addTask(ref);
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                    shape: ContinuousRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    minimumSize: const Size(150, 50),
+                    backgroundColor: const Color.fromRGBO(205, 185, 252, 1),
+                    foregroundColor: Colors.black,
+                    splashFactory: InkRipple.splashFactory),
+                child: const Text(
+                  "Add Task",
+                  style: TextStyle(fontSize: 20),
+                ),
               ),
             ),
           ],

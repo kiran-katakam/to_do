@@ -4,3 +4,6 @@ String toDDMMYYYY(DateTime date) {
 
 const String personalTaskCountKey = "personalTaskCount";
 const String personalTaskKeyPrefix = "personalTask";
+
+const String academicTaskCountKey = "academicTaskCount";
+const String academicTaskCountPrefix = "academicTask";

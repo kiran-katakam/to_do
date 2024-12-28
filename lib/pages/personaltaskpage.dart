@@ -4,47 +4,48 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:to_do/providers/taskprovider.dart';
 import 'package:to_do/utils.dart';
 
-class PersonalTask extends StatefulWidget {
-  const PersonalTask({super.key});
+class PersonalTaskPage extends StatefulWidget {
+  const PersonalTaskPage({super.key});
 
   @override
-  State<PersonalTask> createState() => _PersonalTaskState();
+  State<PersonalTaskPage> createState() => _PersonalTaskPageState();
 }
 
-class _PersonalTaskState extends State<PersonalTask> {
-  bool isRelatedToMoney = false;
-  late TextEditingController moneyController;
-  late TextEditingController titleController;
-  late TextEditingController descriptionController;
-  late DateTime selectedDate;
-  late bool isDateModified;
+class _PersonalTaskPageState extends State<PersonalTaskPage> {
+  bool _isRelatedToMoney = false;
+  late TextEditingController _moneyController;
+  late TextEditingController _titleController;
+  late TextEditingController _descriptionController;
+  late DateTime _selectedDate;
+  late bool _isDateModified;
+  late FocusNode _titleFocusNode;
 
   Future<void> _addTask(WidgetRef ref) async {
     final task = {
-      'title': titleController.text.trim(),
-      'description': descriptionController.text.trim(),
-      'isRelatedToMoney': isRelatedToMoney,
-      'money': isRelatedToMoney ? moneyController.text.trim() : null.toString(),
-      'date': toDDMMYYYY(selectedDate),
+      'title': _titleController.text.trim(),
+      'description': _descriptionController.text.trim(),
+      '_isRelatedToMoney': _isRelatedToMoney,
+      'money': _isRelatedToMoney ? _moneyController.text.trim() : null.toString(),
+      'date': toDDMMYYYY(_selectedDate),
     };
-    await ref.read(personalTaskProvider.notifier).addTask(jsonEncode(task));
+    await ref.read(taskProvider.notifier).addPersonalTask(jsonEncode(task));
     _showSnackBar("Task Added Successfully");
   }
 
   bool _validateInputs() {
-    if (titleController.text.trim().isEmpty) {
+    if (_titleController.text.trim().isEmpty) {
       _showSnackBar("Title Required");
       return false;
     }
-    if (descriptionController.text.trim().isEmpty) {
+    if (_descriptionController.text.trim().isEmpty) {
       _showSnackBar("Description Required");
       return false;
     }
-    if (isRelatedToMoney && moneyController.text.trim().isEmpty) {
+    if (_isRelatedToMoney && _moneyController.text.trim().isEmpty) {
       _showSnackBar("Amount Required");
       return false;
     }
-    if (!isDateModified) {
+    if (!_isDateModified) {
       _showSnackBar("Please Select a Date");
       return false;
     }
@@ -62,29 +63,31 @@ class _PersonalTaskState extends State<PersonalTask> {
   }
 
   void resetPage() {
-    moneyController.clear();
-    titleController.clear();
-    descriptionController.clear();
+    _moneyController.clear();
+    _titleController.clear();
+    _descriptionController.clear();
     setState(() {
-      isRelatedToMoney = false;
+      _isRelatedToMoney = false;
     });
   }
 
   @override
   void initState() {
     super.initState();
-    moneyController = TextEditingController();
-    titleController = TextEditingController();
-    descriptionController = TextEditingController();
-    selectedDate = DateTime.now();
-    isDateModified = false;
+    _moneyController = TextEditingController();
+    _titleController = TextEditingController();
+    _descriptionController = TextEditingController();
+    _selectedDate = DateTime.now();
+    _isDateModified = false;
+    _titleFocusNode = FocusNode();
   }
 
   @override
   void dispose() {
-    moneyController.dispose();
-    titleController.dispose();
-    descriptionController.dispose();
+    _moneyController.dispose();
+    _titleController.dispose();
+    _descriptionController.dispose();
+    _titleFocusNode.dispose();
     super.dispose();
   }
 
@@ -113,7 +116,8 @@ class _PersonalTaskState extends State<PersonalTask> {
               ),        
               keyboardType: TextInputType.text,
               textInputAction: TextInputAction.next,
-              controller: titleController,
+              controller: _titleController,
+              focusNode: _titleFocusNode,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 24),
@@ -126,7 +130,7 @@ class _PersonalTaskState extends State<PersonalTask> {
                       borderRadius: BorderRadius.circular(15)),
                 ),
                 textInputAction: TextInputAction.newline,
-                controller: descriptionController,
+                controller: _descriptionController,
               ),
             ),
             Row(
@@ -138,13 +142,13 @@ class _PersonalTaskState extends State<PersonalTask> {
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0),
                   child: Switch.adaptive(
-                    value: isRelatedToMoney,
+                    value: _isRelatedToMoney,
                     onChanged: (value) {
                       setState(
                         () {
-                          isRelatedToMoney = value;
-                          if (!isRelatedToMoney) {
-                            moneyController.clear();
+                          _isRelatedToMoney = value;
+                          if (!_isRelatedToMoney) {
+                            _moneyController.clear();
                           }
                         },
                       );
@@ -164,8 +168,8 @@ class _PersonalTaskState extends State<PersonalTask> {
                       ),
                       keyboardType: const TextInputType.numberWithOptions(),
                       textInputAction: TextInputAction.next,
-                      enabled: isRelatedToMoney,
-                      controller: moneyController,
+                      enabled: _isRelatedToMoney,
+                      controller: _moneyController,
                     ),
                   ),
                 ),
@@ -176,12 +180,12 @@ class _PersonalTaskState extends State<PersonalTask> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  "Selected Date",
+                  "Expected Date",
                   style: TextStyle(fontSize: 16),
                 ),
                 GestureDetector(
                   child: Text(
-                      "${selectedDate.day}-${selectedDate.month}-${selectedDate.year}"),
+                      "${_selectedDate.day}-${_selectedDate.month}-${_selectedDate.year}"),
                   onTap: () async {
                     final pickedDate = await showDatePicker(
                       context: context,
@@ -193,8 +197,8 @@ class _PersonalTaskState extends State<PersonalTask> {
                     if (pickedDate != null) {
                       setState(
                         () {
-                          selectedDate = pickedDate;
-                          isDateModified = true;
+                          _selectedDate = pickedDate;
+                          _isDateModified = true;
                         },
                       );
                     }
@@ -210,6 +214,7 @@ class _PersonalTaskState extends State<PersonalTask> {
                 onPressed: () async {
                   if (_validateInputs()) {
                     await _addTask(ref);
+                    FocusScope.of(context).requestFocus(_titleFocusNode);
                     resetPage();
                   }
                 },

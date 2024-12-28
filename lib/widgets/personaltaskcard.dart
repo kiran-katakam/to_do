@@ -1,10 +1,63 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 
 class PersonalTaskCard extends StatelessWidget {
-  const PersonalTaskCard({super.key});
+  const PersonalTaskCard({super.key, required this.taskString});
+  final String taskString;
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    final dynamic task = jsonDecode(taskString);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+      child: Card(
+        shape: ContinuousRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    task["title"],
+                    style: const TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Text(
+                    task["date"],
+                    style: const TextStyle(fontSize: 20),
+                  )
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    task["description"],
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ),
+                  task["isRelatedToMoney"]
+                      ? Text(
+                          "₹ ${task["money"]}",
+                          style: const TextStyle(fontSize: 20),
+                        )
+                      : const SizedBox.shrink()
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

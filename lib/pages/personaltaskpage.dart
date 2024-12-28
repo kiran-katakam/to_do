@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:to_do/providers/taskprovider.dart';
@@ -18,15 +19,15 @@ class _PersonalTaskState extends State<PersonalTask> {
   late DateTime selectedDate;
   late bool isDateModified;
 
-  void _addTask(WidgetRef ref) async {
+  Future<void> _addTask(WidgetRef ref) async {
     final task = {
       'title': titleController.text.trim(),
       'description': descriptionController.text.trim(),
       'isRelatedToMoney': isRelatedToMoney,
-      'money': isRelatedToMoney ? moneyController.text.trim() : null,
+      'money': isRelatedToMoney ? moneyController.text.trim() : null.toString(),
       'date': toDDMMYYYY(selectedDate),
     };
-    await ref.read(personalTaskProvider.notifier).addTask(task.toString());
+    await ref.read(personalTaskProvider.notifier).addTask(jsonEncode(task));
     _showSnackBar("Task Added Successfully");
   }
 
@@ -60,6 +61,15 @@ class _PersonalTaskState extends State<PersonalTask> {
     );
   }
 
+  void resetPage() {
+    moneyController.clear();
+    titleController.clear();
+    descriptionController.clear();
+    setState(() {
+      isRelatedToMoney = false;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -87,7 +97,7 @@ class _PersonalTaskState extends State<PersonalTask> {
         shadowColor: Colors.black,
         elevation: 3,
         titleTextStyle: const TextStyle(fontSize: 28, color: Colors.white),
-        backgroundColor: Colors.purple[900],
+        // backgroundColor: Colors.purple[900],
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -100,7 +110,7 @@ class _PersonalTaskState extends State<PersonalTask> {
                 label: const Text("Title"),
                 border:
                     OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
-              ),
+              ),        
               keyboardType: TextInputType.text,
               textInputAction: TextInputAction.next,
               controller: titleController,
@@ -199,7 +209,8 @@ class _PersonalTaskState extends State<PersonalTask> {
               builder: (context, ref, child) => ElevatedButton(
                 onPressed: () async {
                   if (_validateInputs()) {
-                    _addTask(ref);
+                    await _addTask(ref);
+                    resetPage();
                   }
                 },
                 style: ElevatedButton.styleFrom(

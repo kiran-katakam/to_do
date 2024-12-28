@@ -30,7 +30,7 @@ class FAB extends StatelessWidget {
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => const AcademicTask(),
+                builder: (context) => const AcademicTaskPage(),
               ),
             );
           },
@@ -43,7 +43,7 @@ class FAB extends StatelessWidget {
           ),
           onTap: () => Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => const PersonalTask(),
+              builder: (context) => const PersonalTaskPage(),
             ),
           ),
         ),

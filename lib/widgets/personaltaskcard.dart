@@ -2,12 +2,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 class PersonalTaskCard extends StatelessWidget {
-  const PersonalTaskCard({super.key, required this.taskString});
-  final String taskString;
+  const PersonalTaskCard({super.key, required this.personalTaskString});
+  final String personalTaskString;
 
   @override
   Widget build(BuildContext context) {
-    final dynamic task = jsonDecode(taskString);
+    final dynamic task = jsonDecode(personalTaskString);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),

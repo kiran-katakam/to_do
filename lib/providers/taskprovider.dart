@@ -3,13 +3,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:to_do/utils.dart';
 
-final personalTaskProvider = ChangeNotifierProvider(
+final taskProvider = ChangeNotifierProvider(
   (ref) => PersonalTasks(),
 );
 
 class PersonalTasks extends ChangeNotifier {
   SharedPreferences? _sharedPreferences;
-  List<String> tasks = [];
+  List<String> personalTasks = [];
+  List<String> academicTasks = [];
 
   Future<void> _instantiateSharedPreferencesInstance() async {
     _sharedPreferences ??= await SharedPreferences.getInstance();
@@ -17,28 +18,45 @@ class PersonalTasks extends ChangeNotifier {
 
   Future<void> loadTasks() async {
     await _instantiateSharedPreferencesInstance();
-    final count = _sharedPreferences?.getInt(personalTaskCountKey) ?? 0;
-    tasks = List.generate(count, (index) {
+    final personalTaskCount = _sharedPreferences?.getInt(personalTaskCountKey) ?? 0;
+    final academicTaskCount = _sharedPreferences?.getInt(personalTaskCountKey) ?? 0;
+    personalTasks = List.generate(personalTaskCount, (index) {
       return _sharedPreferences
               ?.getString('$personalTaskKeyPrefix${index + 1}') ??
+          '';
+    });
+    academicTasks = List.generate(academicTaskCount, (index) {
+      return _sharedPreferences
+              ?.getString('$academicTaskCountPrefix${index + 1}') ??
           '';
     });
     notifyListeners();
   }
 
-  Future<void> addTask(String task) async {
+  Future<void> addPersonalTask(String task) async {
     await _instantiateSharedPreferencesInstance();
-    tasks.add(task);
+    personalTasks.add(task);
     await _sharedPreferences!
-        .setString('$personalTaskKeyPrefix${tasks.length}', task);
-    await _sharedPreferences!.setInt(personalTaskCountKey, tasks.length);
+        .setString('$personalTaskKeyPrefix${personalTasks.length}', task);
+    await _sharedPreferences!.setInt(personalTaskCountKey, personalTasks.length);
+    notifyListeners();
+  }
+
+  Future<void> addAcademicTask(String task) async {
+    await _instantiateSharedPreferencesInstance();
+    academicTasks.add(task);
+    await _sharedPreferences!
+        .setString('$academicTaskCountPrefix${academicTasks.length}', task);
+    await _sharedPreferences!.setInt(academicTaskCountKey, academicTasks.length);
     notifyListeners();
   }
 
   Future<void> removeAllTasks() async {
     await _instantiateSharedPreferencesInstance();
-    tasks.clear();
+    personalTasks.clear();
+    academicTasks.clear();
     await _sharedPreferences!.setInt(personalTaskCountKey, 0);
+    await _sharedPreferences!.setInt(academicTaskCountKey, 0);
     notifyListeners();
   }
 }

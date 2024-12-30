@@ -22,15 +22,16 @@ A simple and efficient to-do app built with Flutter, designed to help users orga
 
 ## Screenshots
 
-![Academic Task Page](https://github.com/user-attachments/assets/6465fa2f-06a6-4da4-a966-4888599ef4ac)
-![Personal Task Page](https://github.com/user-attachments/assets/16d334b9-88c1-45b4-8b76-0dff49c2c949)
-![Only Number Keyboard](https://github.com/user-attachments/assets/8762cfbc-c60b-4253-a71c-9df3ea051e6a)
-![Home Page](https://github.com/user-attachments/assets/e3447e00-396c-44ea-b777-719fd5f2b408)
-![Floating Action Button](https://github.com/user-attachments/assets/7e5806fc-493a-4106-9901-8eff04c01c3a)
-![Date Selector](https://github.com/user-attachments/assets/f99ff8df-b17d-452a-b0fd-b35e93c9aafc)
-![Both Tasks When Expanded](https://github.com/user-attachments/assets/345b9112-2f0d-4e9c-a9a5-b206ca4df7b6)
-![Both Tasks when Collapsed](https://github.com/user-attachments/assets/d19307e3-b29d-4ee2-b848-8927bdce6407)
-![Academic Tasks](https://github.com/user-attachments/assets/8d23ea3a-9ad0-4f2d-8122-4d6dc5b15d02)
+<img src="https://github.com/user-attachments/assets/6465fa2f-06a6-4da4-a966-4888599ef4ac" width="500" />
+<img src="https://github.com/user-attachments/assets/16d334b9-88c1-45b4-8b76-0dff49c2c949" width="500" />
+<img src="https://github.com/user-attachments/assets/8762cfbc-c60b-4253-a71c-9df3ea051e6a" width="500" />
+<img src="https://github.com/user-attachments/assets/e3447e00-396c-44ea-b777-719fd5f2b408" width="500" />
+<img src="https://github.com/user-attachments/assets/7e5806fc-493a-4106-9901-8eff04c01c3a" width="500" />
+<img src="https://github.com/user-attachments/assets/f99ff8df-b17d-452a-b0fd-b35e93c9aafc" width="500" />
+<img src="https://github.com/user-attachments/assets/345b9112-2f0d-4e9c-a9a5-b206ca4df7b6" width="500" />
+<img src="https://github.com/user-attachments/assets/d19307e3-b29d-4ee2-b848-8927bdce6407" width="500" />
+<img src="https://github.com/user-attachments/assets/8d23ea3a-9ad0-4f2d-8122-4d6dc5b15d02" width="500" />
+
 
 
 ## Installation

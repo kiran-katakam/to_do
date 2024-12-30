@@ -46,11 +46,11 @@ class PersonalTaskCard extends StatelessWidget {
                       fontWeight: FontWeight.w300,
                     ),
                   ),
-                  task["isRelatedToMoney"]
-                      ? Text(
+                  task["isRelatedToMoney"] ?? true
+                      ? task["money"]!=null ? Text(
                           "₹ ${task["money"]}",
                           style: const TextStyle(fontSize: 20),
-                        )
+                        ) : const SizedBox.shrink()
                       : const SizedBox.shrink()
                 ],
               )

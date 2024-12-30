@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:to_do/pages/homepage/bothepersonalandacademictask.dart';
 import 'package:to_do/pages/homepage/homepageappbar.dart';
 import 'package:to_do/pages/homepage/onlyacademictasks.dart';
 import 'package:to_do/pages/homepage/onlypersonaltasks.dart';
@@ -58,7 +59,10 @@ class _HomePageState extends ConsumerState<HomePage> {
             if (tasks.personalTasks.isEmpty) {
               return OnlyAcademicTasks(academicTasks: tasks.academicTasks);
             }
-            return const Center(child: Text("Something"),);
+            return BothPersonalAndAcademicTasks(
+              personalTasks: tasks.personalTasks,
+              academicTasks: tasks.academicTasks,
+            );
           }
         },
       ),

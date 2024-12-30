@@ -25,7 +25,8 @@ class _PersonalTaskPageState extends State<PersonalTaskPage> {
       'title': _titleController.text.trim(),
       'description': _descriptionController.text.trim(),
       '_isRelatedToMoney': _isRelatedToMoney,
-      'money': _isRelatedToMoney ? _moneyController.text.trim() : null.toString(),
+      'money':
+          _isRelatedToMoney ? _moneyController.text.trim() : null.toString(),
       'date': toDDMMYYYY(_selectedDate),
     };
     await ref.read(taskProvider.notifier).addPersonalTask(jsonEncode(task));
@@ -113,7 +114,7 @@ class _PersonalTaskPageState extends State<PersonalTaskPage> {
                 label: const Text("Title"),
                 border:
                     OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
-              ),        
+              ),
               keyboardType: TextInputType.text,
               textInputAction: TextInputAction.next,
               controller: _titleController,
@@ -175,7 +176,7 @@ class _PersonalTaskPageState extends State<PersonalTaskPage> {
                 ),
               ],
             ),
-            const Padding(padding: EdgeInsets.all(8)),
+            const Padding(padding: EdgeInsets.only(top: 24)),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -184,8 +185,7 @@ class _PersonalTaskPageState extends State<PersonalTaskPage> {
                   style: TextStyle(fontSize: 16),
                 ),
                 GestureDetector(
-                  child: Text(
-                      "${_selectedDate.day}-${_selectedDate.month}-${_selectedDate.year}"),
+                  child: Text(toDDMMYYYY(_selectedDate)),
                   onTap: () async {
                     final pickedDate = await showDatePicker(
                       context: context,

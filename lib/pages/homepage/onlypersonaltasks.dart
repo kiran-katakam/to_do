@@ -8,6 +8,7 @@ class OnlyPersonalTasks extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      shrinkWrap: true,
       itemCount: personalTasks.length,
       itemBuilder: (context, index) {
         return PersonalTaskCard(personalTaskString: personalTasks[index]);

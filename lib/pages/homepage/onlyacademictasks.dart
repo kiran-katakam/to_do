@@ -8,6 +8,7 @@ class OnlyAcademicTasks extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      shrinkWrap: true,
       itemCount: academicTasks.length,
       itemBuilder: (context, index) {
       return AcademicTaskCard(taskString: academicTasks[index]);

@@ -19,7 +19,7 @@ class PersonalTasks extends ChangeNotifier {
   Future<void> loadTasks() async {
     await _instantiateSharedPreferencesInstance();
     final personalTaskCount = _sharedPreferences?.getInt(personalTaskCountKey) ?? 0;
-    final academicTaskCount = _sharedPreferences?.getInt(personalTaskCountKey) ?? 0;
+    final academicTaskCount = _sharedPreferences?.getInt(academicTaskCountKey) ?? 0;
     personalTasks = List.generate(personalTaskCount, (index) {
       return _sharedPreferences
               ?.getString('$personalTaskKeyPrefix${index + 1}') ??

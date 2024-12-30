@@ -51,6 +51,7 @@ A simple and efficient to-do app built with Flutter, designed to help users orga
    - Personal
 3. Expand or collapse sections as needed to focus on specific tasks.
 4. Edit or delete tasks when necessary.
+   - Still in development
 
 ## Tech Stack
 

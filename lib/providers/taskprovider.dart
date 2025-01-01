@@ -12,9 +12,8 @@ class PersonalTasks extends ChangeNotifier {
   List<PersonalTask> personalTasks = [];
 
   void loadTasks() {
-    Box box = Hive.box(personalTaskBoxString);
+    Box box = Hive.box<PersonalTask>(personalTaskBoxString);
     personalTasks = List<PersonalTask>.from(box.values);
-    notifyListeners();
   }
 
   Future<void> addTask(PersonalTask task) async {
@@ -25,7 +24,7 @@ class PersonalTasks extends ChangeNotifier {
   }
 
   Future<void> deleteTask(int index) async {
-    Box box = Hive.box(personalTaskBoxString);
+    Box box = Hive.box<PersonalTask>(personalTaskBoxString);
     await box.deleteAt(index);
     personalTasks.removeAt(index);
     notifyListeners();
@@ -37,9 +36,8 @@ class AcademicTasks extends ChangeNotifier {
   List<AcademicTask> academicTasks = [];
 
   void loadTasks() {
-    Box box = Hive.box(academicTaskBoxString);
+    Box box = Hive.box<AcademicTask>(academicTaskBoxString);
     academicTasks = List<AcademicTask>.from(box.values);
-    notifyListeners();
   }
 
   Future<void> addTask(AcademicTask task) async {
@@ -50,7 +48,7 @@ class AcademicTasks extends ChangeNotifier {
   }
 
   Future<void> deleteTask(int index) async {
-    Box box = Hive.box(academicTaskBoxString);
+    Box box = Hive.box<AcademicTask>(academicTaskBoxString);
     await box.deleteAt(index);
     academicTasks.removeAt(index);
     notifyListeners();

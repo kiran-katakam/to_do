@@ -7,55 +7,55 @@ import 'package:to_do/pages/homepage/onlypersonaltasks.dart';
 import 'package:to_do/providers/taskprovider.dart';
 import 'package:to_do/widgets/fab.dart';
 
-class HomePage extends ConsumerStatefulWidget {
+class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
-  ConsumerState<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends ConsumerState<HomePage> {
-
-
-  @override
   Widget build(BuildContext context) {
-
+    
     return Scaffold(
       appBar: const HomePageAppBar(),
-      body: _scaffoldBody(),
+      body: Consumer(
+        builder: (context, ref, child) {   
+          return _scaffoldBody(ref);
+        },
+      ),
       floatingActionButton: const FAB(),
     );
   }
 
-  Widget _scaffoldBody() {
+  Widget _scaffoldBody(WidgetRef ref) {
     
+    ref.read(personalTaskProvider.notifier).loadTasks();
+    ref.read(academicTaskProvider.notifier).loadTasks(); 
     final personalTasks = ref.watch(personalTaskProvider);
     final academicTasks = ref.watch(academicTaskProvider);
 
-    if (personalTasks.personalTasks.isEmpty && academicTasks.academicTasks.isEmpty) {
+    if (personalTasks.personalTasks.isEmpty &&
+        academicTasks.academicTasks.isEmpty) {
       return const Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Good News :)",
-                      style: TextStyle(fontSize: 40),
-                    ),
-                    Text(
-                      "No Pending Tasks",
-                      style: TextStyle(fontSize: 40),
-                    ),
-                  ],
-                ),
-              );
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "Good News :)",
+              style: TextStyle(fontSize: 40),
+            ),
+            Text(
+              "No Pending Tasks",
+              style: TextStyle(fontSize: 40),
+            ),
+          ],
+        ),
+      );
     } else if (personalTasks.personalTasks.isEmpty) {
       return OnlyAcademicTasks(academicTasks: academicTasks.academicTasks);
-
     } else if (academicTasks.academicTasks.isEmpty) {
       return OnlyPersonalTasks(personalTasks: personalTasks.personalTasks);
-
     } else {
-      return BothPersonalAndAcademicTasks(academicTasks: academicTasks.academicTasks, personalTasks: personalTasks.personalTasks);
+      return BothPersonalAndAcademicTasks(
+          academicTasks: academicTasks.academicTasks,
+          personalTasks: personalTasks.personalTasks);
     }
   }
 }

@@ -1,13 +1,13 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:to_do/tasks/tasks.dart';
+import 'package:to_do/utils.dart';
 
 class AcademicTaskCard extends StatelessWidget {
-  const AcademicTaskCard({super.key, required this.taskString});
-  final String taskString;
+  const AcademicTaskCard({super.key, required this.task});
+  final AcademicTask task;
 
   @override
   Widget build(BuildContext context) {
-    final dynamic task = jsonDecode(taskString);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
@@ -24,14 +24,14 @@ class AcademicTaskCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    task["course"],
+                    task.courseCode,
                     style: const TextStyle(
                       fontSize: 32,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   Text(
-                    task["date"],
+                    toDDMMYYYY(task.dueDate),
                     style: const TextStyle(fontSize: 20),
                   )
                 ],
@@ -39,7 +39,7 @@ class AcademicTaskCard extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Text(
-                  task["description"],
+                  task.description,
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w300,

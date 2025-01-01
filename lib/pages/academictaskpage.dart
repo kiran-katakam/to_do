@@ -1,9 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:to_do/providers/taskprovider.dart';
-import 'package:to_do/utils.dart';
+import 'package:to_do/tasks/tasks.dart';
 
 class AcademicTaskPage extends StatefulWidget {
   const AcademicTaskPage({super.key});
@@ -20,12 +18,13 @@ class _AcademicTaskPageState extends State<AcademicTaskPage> {
   late FocusNode _courseFocusNode;
 
   Future<void> _addTask(WidgetRef ref) async {
-    final task = {
-      'course': _courseController.text.trim(),
-      'description': _descriptionController.text.trim(),
-      'date': toDDMMYYYY(_selectedDate),
-    };
-    await ref.read(taskProvider.notifier).addAcademicTask(jsonEncode(task));
+    final AcademicTask task = AcademicTask(
+      courseCode: _courseController.text.trim(),
+      description: _descriptionController.text.trim(),
+      dueDate: _selectedDate,
+    );
+
+    await ref.read(academicTaskProvider.notifier).addTask(task);
     _showSnackBar("Task Added Successfully");
   }
 

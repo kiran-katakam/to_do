@@ -1,7 +1,7 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:to_do/providers/taskprovider.dart';
+import 'package:to_do/tasks/tasks.dart';
 import 'package:to_do/utils.dart';
 
 class PersonalTaskPage extends StatefulWidget {
@@ -21,15 +21,14 @@ class _PersonalTaskPageState extends State<PersonalTaskPage> {
   late FocusNode _titleFocusNode;
 
   Future<void> _addTask(WidgetRef ref) async {
-    final task = {
-      'title': _titleController.text.trim(),
-      'description': _descriptionController.text.trim(),
-      '_isRelatedToMoney': _isRelatedToMoney,
-      'money':
-          _isRelatedToMoney ? _moneyController.text.trim() : null.toString(),
-      'date': toDDMMYYYY(_selectedDate),
-    };
-    await ref.read(taskProvider.notifier).addPersonalTask(jsonEncode(task));
+    final PersonalTask task = PersonalTask(
+      title: _titleController.text.trim(),
+      description: _descriptionController.text.trim(),
+      isRelatedToMoney: _isRelatedToMoney,
+      money: _isRelatedToMoney ? double.parse(_moneyController.text.trim()) : null,
+      dueDate: _selectedDate,
+    );
+    await ref.read(personalTaskProvider.notifier).addTask(task);
     _showSnackBar("Task Added Successfully");
   }
 

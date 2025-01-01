@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:to_do/pages/homepage/onlyacademictasks.dart';
 import 'package:to_do/pages/homepage/onlypersonaltasks.dart';
+import 'package:to_do/tasks/tasks.dart';
 
 class BothPersonalAndAcademicTasks extends StatefulWidget {
   const BothPersonalAndAcademicTasks(
       {super.key, required this.academicTasks, required this.personalTasks});
 
-  final List<String> academicTasks;
-  final List<String> personalTasks;
+  final List<AcademicTask> academicTasks;
+  final List<PersonalTask> personalTasks;
 
   @override
   State<BothPersonalAndAcademicTasks> createState() =>

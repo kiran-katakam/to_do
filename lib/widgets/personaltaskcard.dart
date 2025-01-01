@@ -1,14 +1,13 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:to_do/tasks/tasks.dart';
+import 'package:to_do/utils.dart';
 
 class PersonalTaskCard extends StatelessWidget {
-  const PersonalTaskCard({super.key, required this.personalTaskString});
-  final String personalTaskString;
+  const PersonalTaskCard({super.key, required this.task});
+  final PersonalTask task;
 
   @override
   Widget build(BuildContext context) {
-    final dynamic task = jsonDecode(personalTaskString);
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       child: Card(
@@ -24,14 +23,14 @@ class PersonalTaskCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    task["title"],
+                    task.title,
                     style: const TextStyle(
                       fontSize: 32,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   Text(
-                    task["date"],
+                    toDDMMYYYY(task.dueDate),
                     style: const TextStyle(fontSize: 20),
                   )
                 ],
@@ -40,17 +39,17 @@ class PersonalTaskCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    task["description"],
+                    task.description,
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w300,
                     ),
                   ),
-                  task["isRelatedToMoney"] ?? true
-                      ? task["money"]!=null ? Text(
-                          "₹ ${task["money"]}",
+                  task.isRelatedToMoney
+                      ? Text(
+                          "₹ ${task.money}",
                           style: const TextStyle(fontSize: 20),
-                        ) : const SizedBox.shrink()
+                        )
                       : const SizedBox.shrink()
                 ],
               )

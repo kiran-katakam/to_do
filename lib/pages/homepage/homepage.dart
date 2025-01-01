@@ -15,28 +15,25 @@ class HomePage extends ConsumerStatefulWidget {
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
-  late Future<void> _loadTasksFuture;
 
-  @override
-  void initState() {
-    super.initState();
-    _loadTasksFuture = ref.read(taskProvider).loadTasks();
-  }
 
   @override
   Widget build(BuildContext context) {
-    final tasks = ref.watch(taskProvider);
 
     return Scaffold(
       appBar: const HomePageAppBar(),
-      body: FutureBuilder(
-        future: _loadTasksFuture,
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else {
-            if (tasks.personalTasks.isEmpty && tasks.academicTasks.isEmpty) {
-              return const Center(
+      body: _scaffoldBody(),
+      floatingActionButton: const FAB(),
+    );
+  }
+
+  Widget _scaffoldBody() {
+    
+    final personalTasks = ref.watch(personalTaskProvider);
+    final academicTasks = ref.watch(academicTaskProvider);
+
+    if (personalTasks.personalTasks.isEmpty && academicTasks.academicTasks.isEmpty) {
+      return const Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -51,22 +48,14 @@ class _HomePageState extends ConsumerState<HomePage> {
                   ],
                 ),
               );
-            }
+    } else if (personalTasks.personalTasks.isEmpty) {
+      return OnlyAcademicTasks(academicTasks: academicTasks.academicTasks);
 
-            if (tasks.academicTasks.isEmpty) {
-              return OnlyPersonalTasks(personalTasks: tasks.personalTasks);
-            }
-            if (tasks.personalTasks.isEmpty) {
-              return OnlyAcademicTasks(academicTasks: tasks.academicTasks);
-            }
-            return BothPersonalAndAcademicTasks(
-              personalTasks: tasks.personalTasks,
-              academicTasks: tasks.academicTasks,
-            );
-          }
-        },
-      ),
-      floatingActionButton: const FAB(),
-    );
+    } else if (academicTasks.academicTasks.isEmpty) {
+      return OnlyPersonalTasks(personalTasks: personalTasks.personalTasks);
+
+    } else {
+      return BothPersonalAndAcademicTasks(academicTasks: academicTasks.academicTasks, personalTasks: personalTasks.personalTasks);
+    }
   }
 }
